@@ -13,14 +13,14 @@
 corepack enable
 pnpm install --frozen-lockfile
 cp .env.example .env
-docker compose up -d db
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d db
 pnpm db:migrate:deploy
 pnpm content:validate
 pnpm content:import -- --pack js-baseline-v1
 pnpm dev
 ```
 
-Если основной compose намеренно не публикует PostgreSQL port, используйте development override проекта или запускайте API/DB целиком через Compose. Не изменяйте production compose ради локального подключения.
+Development override публикует PostgreSQL только на `127.0.0.1:5432`, поэтому host-процессы API/Web из `pnpm dev` используют безопасные `localhost` defaults из `.env.example`. Основной production compose намеренно не публикует порт DB; не изменяйте его ради локального подключения.
 
 Адреса development:
 
